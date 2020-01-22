@@ -16,14 +16,12 @@ import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.RegisteredListener;
 
 import java.net.Proxy;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class AuthMeInjectPlugin extends BPlugin implements Listener, EventExecutor {
-    private String lodPWD = "WIXNuW892IW(@*#ISDN82hjjNO@(---WLKMXMXMMXMMX(@*&niWEW@#28328173*(@(**@@*(999";
     private final YggdrasilAuthenticationService authenticationService;
     private final MinecraftSessionService minecraftSessionService;
+    private String lodPWD = "WIXNuW892IW(@*#ISDN82hjjNO@(---WLKMXMXMMXMMX(@*&niWEW@#28328173*(@(**@@*(999";
 
     public AuthMeInjectPlugin() {
         authenticationService = new YggdrasilAuthenticationService(Proxy.NO_PROXY, UUID.randomUUID().toString());

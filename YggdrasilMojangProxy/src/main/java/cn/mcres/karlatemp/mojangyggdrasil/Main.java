@@ -1,39 +1,47 @@
 package cn.mcres.karlatemp.mojangyggdrasil;
 
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Config_Obj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Player_save_Obj;
 import cn.mcres.karlatemp.mojangyggdrasil.bungeecord.BCSupport;
 import cn.mcres.karlatemp.mojangyggdrasil.plugin.AuthMeStartup;
+import com.google.gson.Gson;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.instrument.Instrumentation;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 
 public class Main {
     public static final String mojangHasJoined;
     public static final List<UListener.StreamHandler> handlers = new ArrayList<>();
-    public static final boolean gson;
 
     public static URLStreamHandler http;
     public static URLStreamHandler https;
 
+    public static Config_Obj Config;
+
+    private static final String config = "{\n" +
+            "  \"Port\" : 25566,\n" +
+            "  \"offline\": false,\n" +
+            "  \"authme\": false,\n" +
+            "  \"localUUID\": true\n" +
+            "}";
+
+    private static final String player_save = "{\n" +
+            "  \"players\" : {}\n" +
+            "}";
+
     static {
-        mojangHasJoined = new StringBuilder().append("https://sessionserver").append(".mojang.com/session").append("/minecraft/hasJoined").toString();
-        boolean a = false;
-        try {
-            GT.getUUID(new ByteArrayInputStream("{\"id\":\"\"}".getBytes()));
-            a = true;
-        } catch (Throwable thr) {
-        }
-        gson = a;
+        mojangHasJoined = "https://sessionserver" + ".mojang.com/session" + "/minecraft/hasJoined";
     }
 
     public static void premain(String opt, Instrumentation i) {
@@ -72,20 +80,58 @@ public class Main {
         return rua;
     }
 
+    private static void loadconfig() {
+        try {
+            File file = new File(System.getProperty("user.dir") + "/config.json");
+            GT.file = new File(System.getProperty("user.dir") + "/player_save.json");
+            if (!file.exists()) {
+                InputStream in = new ByteArrayInputStream(config.getBytes());
+                Files.copy(in, file.toPath());
+            }
+            if(!GT.file.exists())
+            {
+                InputStream in = new ByteArrayInputStream(player_save.getBytes());
+                Files.copy(in, GT.file.toPath());
+            }
+
+            Config = new Gson().fromJson(new FileReader(file), Config_Obj.class);
+            GT.g = new Gson().fromJson(new FileReader(GT.file), Player_save_Obj.class);
+
+            if (Config == null) {
+                Config = new Config_Obj(25566);
+                InputStream in = new ByteArrayInputStream(new Gson().toJson(Config).getBytes(StandardCharsets.UTF_8));
+                Files.copy(in, file.toPath());
+            }
+
+            if(GT.g == null)
+            {
+                GT.g = new Player_save_Obj();
+                InputStream in = new ByteArrayInputStream(new Gson().toJson(GT.g).getBytes(StandardCharsets.UTF_8));
+                Files.copy(in, GT.file.toPath());
+            }
+
+        } catch (Exception e) {
+            Loggin.boot.warning("The config load fail");
+            Config = new Config_Obj(25566);
+        }
+    }
+
     private static void bootstart(Instrumentation i, String opt) {
         Loggin.boot.info("Welcome to use MojangYggdrasil");
         Loggin.boot.info("Version: " + Main.class.getPackage().getImplementationVersion());
         Loggin.boot.info("Author: Karla" + "temp. QQ: 3279826484.");
+        Loggin.boot.info("Loading config...");
+        loadconfig();
         opt = www(opt);
         Loggin.conf.info("Yggdrasil ROOT: " + opt);
         inject(opt);
         BCSupport.inject(i, opt);
         Mojang.inject();
-        if (Boolean.getBoolean("mojangyggdrasil.offline")) {
+        if (Config.isOffline()) {
             Offline.build();
         }
         try {
-            if (Boolean.getBoolean("mojangyggdrasil.authme"))
+            if (Config.isAuthme())
                 AuthMeStartup.startup(i);
         } catch (NoClassDefFoundError nf) {
             // BungeeCord...
@@ -99,6 +145,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws Throwable {
+
         inject("https://auth2.nide8.com:233/f2894ffc98e711e9921b525400b59b6a");
         new URL("https://auth2.nide8.com:233/f2894ffc98e711e9921b525400b59b6a/sessionserver/session/minecraft/hasJoined?username=Karlatemp&serverId=UID").openConnection();
     }

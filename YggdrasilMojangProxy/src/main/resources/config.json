@@ -1,0 +1,6 @@
+{
+  "Port" : 25566,
+  "offline": false,
+  "authme": false,
+  "localUUID": true
+}

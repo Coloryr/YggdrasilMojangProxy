@@ -1,5 +1,13 @@
 package cn.mcres.karlatemp.mojangyggdrasil.bungeecord;
 
+import cn.mcres.karlatemp.mojangyggdrasil.GT;
+import cn.mcres.karlatemp.mojangyggdrasil.Loggin;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Login_Obj;
+import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+
 import java.io.*;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -9,16 +17,18 @@ import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.logging.Level;
 
-import cn.mcres.karlatemp.mojangyggdrasil.Loggin;
-import com.google.common.cache.Cache;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-
+import static cn.mcres.karlatemp.mojangyggdrasil.Main.Config;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BCSupport implements ClassFileTransformer, HttpHandler {
     private static final String root = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=";
+    private int port;
+    private boolean rooted = false;
+    private boolean booted = false;
+
+    public BCSupport() {
+
+    }
 
     public static int indexOf(byte[] from, byte[] search, int off) {
         if (from.length < search.length) {
@@ -63,21 +73,14 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         return nw;
     }
 
-    public BCSupport() {
-
-    }
-
     public static void inject(Instrumentation i, String opt) {
         BCSupport bc = new BCSupport();
-        bc.port = Integer.getInteger("mojangyggdrasil.bungee.port", 0);
+        bc.port = Config.getPort();
         new Thread(() -> {
             // Wait Authlib-injector
             i.addTransformer(bc);
         }).start();
     }
-
-    private int port;
-    private boolean rooted = false;
 
     @Override
     public byte[] transform(ClassLoader loader, String className,
@@ -102,8 +105,6 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         }
         return classfileBuffer;
     }
-
-    private boolean booted = false;
 
     private void startup() {
         if (booted) return;
@@ -139,13 +140,17 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         InputStream io;
         if (i == 200) io = http.getInputStream();
         else io = http.getErrorStream();
-        byte[] buff = new byte[1024];
+        byte[] buff = new byte[io.available()];
         OutputStream out = httpExchange.getResponseBody();
-        while (true) {
-            int len = io.read(buff);
-            if (len == -1) break;
-            out.write(buff, 0, len);
+        io.read(buff);
+        String temp = new String(buff);
+        if (Config.isLocalUUID()) {
+            Login_Obj obj = new Gson().fromJson(temp, Login_Obj.class);
+            String uuid = GT.getUUID(obj.getName(), obj.getId());
+            obj.setId(uuid);
+            temp = new Gson().toJson(obj);
         }
+        out.write(temp.getBytes());
         httpExchange.close();
     }
 }

@@ -6,7 +6,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,19 +14,17 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class PLoader implements PluginLoader {
-    protected final Server server;
-
-    public PLoader(Server server) {
-        this.server = server;
-    }
-
-    public static ClassLoader parent;
     public static final File main = new File("w") {
         @Override
         public String getName() {
             return "MojangYggdrasilProxy/MainStartup";
         }
     };
+    public static ClassLoader parent;
+    protected final Server server;
+    public PLoader(Server server) {
+        this.server = server;
+    }
 
     @Override
     public Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException {

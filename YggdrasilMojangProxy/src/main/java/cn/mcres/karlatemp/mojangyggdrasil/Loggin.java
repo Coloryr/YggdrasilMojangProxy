@@ -14,12 +14,7 @@ public class Loggin {
     public static final Logger plugin = getLogger("plugin");
     public static final Logger bungee = getLogger("bungee");
     public static final PrintStream ps = System.out;
-
-    private static Logger getLogger(String suffix) {
-        Logger l = Logger.getLogger(prefix + "." + suffix);
-        l.setParent(boot);
-        return l;
-    }
+    private static final String n = "\n";
 
     static {
         boot.setUseParentHandlers(false);
@@ -42,7 +37,11 @@ public class Loggin {
         });
     }
 
-    private static final String n = "\n";
+    private static Logger getLogger(String suffix) {
+        Logger l = Logger.getLogger(prefix + "." + suffix);
+        l.setParent(boot);
+        return l;
+    }
 
     private synchronized static void write(StringBuilder bui, String lname) {
         synchronized (ps) {

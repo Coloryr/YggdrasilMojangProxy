@@ -4,21 +4,13 @@ import java.io.IOException;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.*;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 
 public class UListener extends URLStreamHandler {
-    private final int defport;
-    private final URLStreamHandler parent;
     private static final Method a, b;
-    private final StreamHandler h;
-
-    public static class Store<T> {
-        T value;
-    }
-
-    public interface StreamHandler {
-        void run(UListener listener, URL u, Proxy p, Store<URLConnection> uc) throws IOException;
-    }
 
     static {
         Method c = null, d = null;
@@ -30,6 +22,16 @@ public class UListener extends URLStreamHandler {
         a = c;
         b = d;
         AccessibleObject.setAccessible(new AccessibleObject[]{c, d}, true);
+    }
+
+    private final int defport;
+    private final URLStreamHandler parent;
+    private final StreamHandler h;
+
+    public UListener(int defport, URLStreamHandler parent, StreamHandler sh) {
+        this.defport = defport;
+        this.parent = parent;
+        h = sh;
     }
 
     private static URLConnection open(URLStreamHandler handler, URL u, Proxy p) throws IOException {
@@ -46,12 +48,6 @@ public class UListener extends URLStreamHandler {
             if (thr instanceof IOException) throw (IOException) thr;
             throw new IOException(thr);
         }
-    }
-
-    public UListener(int defport, URLStreamHandler parent, StreamHandler sh) {
-        this.defport = defport;
-        this.parent = parent;
-        h = sh;
     }
 
     @Override
@@ -73,5 +69,13 @@ public class UListener extends URLStreamHandler {
         h.run(this, u, null, connect);
         if (connect.value != null) return connect.value;
         return open(parent, u, null);
+    }
+
+    public interface StreamHandler {
+        void run(UListener listener, URL u, Proxy p, Store<URLConnection> uc) throws IOException;
+    }
+
+    public static class Store<T> {
+        T value;
     }
 }

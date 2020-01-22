@@ -1,12 +1,8 @@
 package cn.mcres.karlatemp.mojangyggdrasil;
 
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.message.BufferedHeader;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -50,10 +46,13 @@ public class Offline {
                     String username = qr.substring(index + 9, end);
                     c.value = new BuffedHttpConnection(x, create(username));
                 }
-            } else if (Main.gson) {
+            } else if (Main.Config.isLocalUUID()) {
                 URLConnection uc = c.value;
                 if (uc instanceof BuffedHttpConnection) {
-                    String id = GT.getUUID(uc.getInputStream());
+                    InputStream is =  uc.getInputStream();
+                    byte[] temp = new byte[is.available()];
+                    is.read(temp);
+                    String id = GT.getUUID(new String(temp), null);
                     handlers.forEach(a -> a.accept(id));
                 }
             }

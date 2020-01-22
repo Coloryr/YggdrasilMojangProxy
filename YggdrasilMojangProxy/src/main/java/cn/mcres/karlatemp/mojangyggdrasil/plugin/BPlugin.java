@@ -3,7 +3,6 @@ package cn.mcres.karlatemp.mojangyggdrasil.plugin;
 
 import cn.mcres.karlatemp.mojangyggdrasil.Loggin;
 import com.avaje.ebean.EbeanServer;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,16 +20,15 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class BPlugin implements Plugin {
+    protected final Map<String, Long> uuids = new HashMap<>();
     protected PluginDescriptionFile pds = new PluginDescriptionFile(getName(), getVersion(), getClass().getName());
     protected PLoader loader;
     protected boolean enabled = false;
+    protected long timedout = 1000 * 30;
 
     protected String getVersion() {
         return "1.1";
     }
-
-    protected final Map<String, Long> uuids = new HashMap<>();
-    protected long timedout = 1000 * 30;
 
     protected void postOnline(String uuid) {
     }
