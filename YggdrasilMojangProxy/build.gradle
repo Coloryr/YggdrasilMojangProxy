@@ -55,7 +55,7 @@ jar {
                 "Premain-Class": "cn.mcres.karlatemp.mojangyggdrasil.Main"
         )
     }
-    into('lib') {
-        from configurations.runtime
-    }
+//    into('lib') {
+//        from configurations.runtime
+//    }
 }

@@ -79,6 +79,7 @@ public class Offline {
             }
             bos.write("\",\"properties\":[]}".getBytes());
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return bos.toByteArray();
     }
@@ -88,9 +89,5 @@ public class Offline {
         if (b < 0xA)
             return (byte) ('0' + b);
         return (byte) ('a' - 0xA + b);
-    }
-
-    public static void main(String[] w) throws IOException {
-        System.out.write(create("鸡你太美,BayBay"));
     }
 }

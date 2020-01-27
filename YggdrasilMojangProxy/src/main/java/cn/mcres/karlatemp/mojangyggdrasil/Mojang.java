@@ -37,6 +37,7 @@ public class Mojang {
                 }
                 huc.disconnect();
             } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
             try {
                 URL mojang = new URL(null, Main.mojangHasJoined + "?" + url.getQuery(), Main.https);
@@ -50,6 +51,7 @@ public class Mojang {
                 }
                 huc.disconnect();
             } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
             if (store.value == null) {
                 store.value = new BuffedHttpConnection(url, new byte[0], respone);

@@ -19,12 +19,11 @@ import java.net.Proxy;
 import java.util.UUID;
 
 public class AuthMeInjectPlugin extends BPlugin implements Listener, EventExecutor {
-    private final YggdrasilAuthenticationService authenticationService;
     private final MinecraftSessionService minecraftSessionService;
     private String lodPWD = "WIXNuW892IW(@*#ISDN82hjjNO@(---WLKMXMXMMXMMX(@*&niWEW@#28328173*(@(**@@*(999";
 
     public AuthMeInjectPlugin() {
-        authenticationService = new YggdrasilAuthenticationService(Proxy.NO_PROXY, UUID.randomUUID().toString());
+        YggdrasilAuthenticationService authenticationService = new YggdrasilAuthenticationService(Proxy.NO_PROXY, UUID.randomUUID().toString());
         minecraftSessionService = authenticationService.createMinecraftSessionService();
     }
 
@@ -73,7 +72,6 @@ public class AuthMeInjectPlugin extends BPlugin implements Listener, EventExecut
                     api.forceUnregister(p);
                 }
             }
-        } else if (getServer().getOnlineMode()) {
         } else if (event instanceof AsyncPlayerPreLoginEvent) {
             AsyncPlayerPreLoginEvent ev = (AsyncPlayerPreLoginEvent) event;
             GameProfile profile = new GameProfile(ev.getUniqueId(), ev.getName());

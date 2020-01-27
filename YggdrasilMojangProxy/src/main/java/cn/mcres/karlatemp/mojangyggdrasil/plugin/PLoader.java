@@ -50,6 +50,7 @@ public class PLoader implements PluginLoader {
                                 byte[] array = Offline.readAll(clazz);
                                 return defineClass(name, array, 0, array.length);
                             } catch (IOException ioe) {
+                                ioe.printStackTrace();
                             }
                         }
                     }

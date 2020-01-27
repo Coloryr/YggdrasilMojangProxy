@@ -18,6 +18,7 @@ public class UListener extends URLStreamHandler {
             c = URLStreamHandler.class.getDeclaredMethod("openConnection", URL.class);
             d = URLStreamHandler.class.getDeclaredMethod("openConnection", URL.class, Proxy.class);
         } catch (NoSuchMethodException e) {
+            e.printStackTrace();
         }
         a = c;
         b = d;

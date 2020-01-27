@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 
 public class Main {
-    public static final String mojangHasJoined;
+    public static final String mojangHasJoined = "https://sessionserver.mojang.com/session/minecraft/hasJoined";
     public static final List<UListener.StreamHandler> handlers = new ArrayList<>();
 
     public static URLStreamHandler http;
@@ -39,10 +39,6 @@ public class Main {
     private static final String player_save = "{\n" +
             "  \"players\" : {}\n" +
             "}";
-
-    static {
-        mojangHasJoined = "https://sessionserver" + ".mojang.com/session" + "/minecraft/hasJoined";
-    }
 
     public static void premain(String opt, Instrumentation i) {
         bootstart(i, opt);
@@ -144,9 +140,7 @@ public class Main {
         bootstart(i, opt);
     }
 
-    public static void main(String[] args) throws Throwable {
-
-        inject("https://auth2.nide8.com:233/f2894ffc98e711e9921b525400b59b6a");
-        new URL("https://auth2.nide8.com:233/f2894ffc98e711e9921b525400b59b6a/sessionserver/session/minecraft/hasJoined?username=Karlatemp&serverId=UID").openConnection();
+    public static void main(String[] args) {
+        Loggin.boot.info("请不要启动JAR");
     }
 }

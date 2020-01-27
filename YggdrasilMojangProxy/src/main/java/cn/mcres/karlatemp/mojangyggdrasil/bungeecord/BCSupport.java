@@ -21,14 +21,13 @@ import static cn.mcres.karlatemp.mojangyggdrasil.Main.Config;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BCSupport implements ClassFileTransformer, HttpHandler {
+
     private static final String root = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=";
     private int port;
     private boolean rooted = false;
     private boolean booted = false;
 
-    public BCSupport() {
-
-    }
+    public BCSupport() { }
 
     public static int indexOf(byte[] from, byte[] search, int off) {
         if (from.length < search.length) {
@@ -117,6 +116,7 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
                 try {
                     ss.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
             server.bind(new InetSocketAddress(port), 0);
@@ -137,20 +137,20 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         final HttpURLConnection http = (HttpURLConnection) uc;
         int i = http.getResponseCode();
         httpExchange.sendResponseHeaders(i, 0);
-        InputStream io;
-        if (i == 200) io = http.getInputStream();
-        else io = http.getErrorStream();
-        byte[] buff = new byte[io.available()];
-        OutputStream out = httpExchange.getResponseBody();
-        io.read(buff);
-        String temp = new String(buff);
-        if (Config.isLocalUUID()) {
-            Login_Obj obj = new Gson().fromJson(temp, Login_Obj.class);
-            String uuid = GT.getUUID(obj.getName(), obj.getId());
-            obj.setId(uuid);
-            temp = new Gson().toJson(obj);
+        if (i == 200) {
+            InputStream io = http.getInputStream();
+            byte[] buff = new byte[io.available()];
+            OutputStream out = httpExchange.getResponseBody();
+            io.read(buff);
+            String temp = new String(buff);
+            if (Config.isLocalUUID()) {
+                Login_Obj obj = new Gson().fromJson(temp, Login_Obj.class);
+                String uuid = GT.getUUID(obj.getName(), obj.getId());
+                obj.setId(uuid);
+                temp = new Gson().toJson(obj);
+            }
+            out.write(temp.getBytes());
         }
-        out.write(temp.getBytes());
         httpExchange.close();
     }
 }

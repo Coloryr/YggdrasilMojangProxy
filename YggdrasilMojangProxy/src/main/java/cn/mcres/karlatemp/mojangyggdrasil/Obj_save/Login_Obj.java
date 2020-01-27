@@ -28,6 +28,7 @@ public class Login_Obj {
         return properties;
     }
 }
+
 class Properties {
 
     private String name;
