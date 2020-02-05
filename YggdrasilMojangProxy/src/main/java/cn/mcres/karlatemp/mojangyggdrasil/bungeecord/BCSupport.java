@@ -1,8 +1,10 @@
 package cn.mcres.karlatemp.mojangyggdrasil.bungeecord;
 
-import cn.mcres.karlatemp.mojangyggdrasil.GT;
-import cn.mcres.karlatemp.mojangyggdrasil.Loggin;
+import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
+import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
+import cn.mcres.karlatemp.mojangyggdrasil.Main;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Login_Obj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Properties;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -13,12 +15,10 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.logging.Level;
-
-import static cn.mcres.karlatemp.mojangyggdrasil.Main.Config;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BCSupport implements ClassFileTransformer, HttpHandler {
 
@@ -27,7 +27,8 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
     private boolean rooted = false;
     private boolean booted = false;
 
-    public BCSupport() { }
+    public BCSupport() {
+    }
 
     public static int indexOf(byte[] from, byte[] search, int off) {
         if (from.length < search.length) {
@@ -63,7 +64,7 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
     }
 
     public static byte[] toContant(String contain) {
-        byte[] got = contain.getBytes(UTF_8);
+        byte[] got = contain.getBytes(StandardCharsets.UTF_8);
         byte[] nw = new byte[got.length + 2];
         int leng = got.length;
         nw[0] = (byte) ((leng >>> Byte.SIZE) & 0xFF);
@@ -74,7 +75,7 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
 
     public static void inject(Instrumentation i, String opt) {
         BCSupport bc = new BCSupport();
-        bc.port = Config.getPort();
+        bc.port = Main.Config.getPort();
         new Thread(() -> {
             // Wait Authlib-injector
             i.addTransformer(bc);
@@ -143,12 +144,19 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
             OutputStream out = httpExchange.getResponseBody();
             io.read(buff);
             String temp = new String(buff);
-            if (Config.isLocalUUID()) {
-                Login_Obj obj = new Gson().fromJson(temp, Login_Obj.class);
-                String uuid = GT.getUUID(obj.getName(), obj.getId());
-                obj.setId(uuid);
-                temp = new Gson().toJson(obj);
+
+            Login_Obj obj = new Gson().fromJson(temp, Login_Obj.class);
+            String uuid = PlayerConfig.getUUID(obj.getName(), obj.getId());
+            if (PlayerConfig.isBan(obj.getName(), uuid)) {
+                httpExchange.close();
+                return;
             }
+
+            Main.SKinTemp.put(uuid, obj.getProperties());
+
+            obj.setId(uuid);
+            temp = new Gson().toJson(obj);
+
             out.write(temp.getBytes());
         }
         httpExchange.close();

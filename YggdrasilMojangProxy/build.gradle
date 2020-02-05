@@ -34,7 +34,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.12.1'
     compile 'org.apache.httpcomponents:httpclient:4.5.11'
 
-    compile 'org.spigotmc:spigot-api:1.8-R0.1-SNAPSHOT'
     compile 'net.md-5:bungeecord-api:1.15-SNAPSHOT'
 
     compile 'fr.xephi:authme:5.6.0-SNAPSHOT'
