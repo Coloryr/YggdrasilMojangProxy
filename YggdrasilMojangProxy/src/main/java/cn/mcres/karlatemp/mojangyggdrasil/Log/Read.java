@@ -2,16 +2,12 @@ package cn.mcres.karlatemp.mojangyggdrasil.Log;
 
 import cn.mcres.karlatemp.mojangyggdrasil.Config.MainConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
-import cn.mcres.karlatemp.mojangyggdrasil.Main;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Properties;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.SocketObj;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.TestObj;
 import com.google.gson.Gson;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 
 public class Read {
     final ServerSocket server = new ServerSocket(123);
@@ -46,28 +42,6 @@ public class Read {
                         } else {
                             PlayerConfig.AddPlayer(obj.getID(), obj.getUUID().replaceAll("-", ""));
                             Loggin.bungee.info("已设置" + obj.getID() + "的UUID为：" + obj.getUUID());
-                        }
-                    } else if(obj.getDo().equalsIgnoreCase("GetSkin")) {
-                        if (obj.getUUID().isEmpty()) {
-                            Loggin.bungee.info("UUID为空无法查找");
-                        } else {
-                            String UUID = obj.getUUID().replaceAll("-", "");
-                            Loggin.bungee.info("查找：" + UUID + "的皮肤");
-
-                            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-                            if (Main.SKinTemp.containsKey(UUID)) {
-                                TestObj obj1 = new TestObj(Main.SKinTemp.get(UUID));
-                                String data = new Gson().toJson(obj1);
-                                out.println(data);
-                                out.flush();
-                                out.close();
-                                Loggin.bungee.info("找到" + UUID + "的皮肤");
-                            } else {
-                                out.println("");
-                                out.flush();
-                                out.close();
-                                Loggin.bungee.info("没有找到" + UUID + "的皮肤");
-                            }
                         }
                     }
                 } catch (Exception e) {

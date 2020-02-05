@@ -66,7 +66,6 @@ public class Control extends Plugin {
     public void onEnable() {
         log.info("§d[Control]§e正在启动，感谢使用，本插件交流群：571239090");
         setConfig();
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new LoginListener());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new command());
         log.info("§d[Control]§e已启动-" + Version);
     }

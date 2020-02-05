@@ -152,8 +152,6 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
                 return;
             }
 
-            Main.SKinTemp.put(uuid, obj.getProperties());
-
             obj.setId(uuid);
             temp = new Gson().toJson(obj);
 

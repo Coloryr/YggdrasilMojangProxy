@@ -20,7 +20,6 @@ import java.util.Map;
 public class Main {
     public static final String mojangHasJoined = "https://sessionserver.mojang.com/session/minecraft/hasJoined";
     public static final List<UListener.StreamHandler> handlers = new ArrayList<>();
-    public static final Map<String, List<Properties>> SKinTemp = new HashMap<>();
 
     public static URLStreamHandler http;
     public static URLStreamHandler https;
