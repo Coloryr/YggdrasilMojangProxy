@@ -2,23 +2,16 @@ package cn.mcres.karlatemp.mojangyggdrasil.Log;
 
 import cn.mcres.karlatemp.mojangyggdrasil.Config.MainConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj.SocketObj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.SocketObj;
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Read {
     final ServerSocket server = new ServerSocket(123);
     final Thread thread = new Thread(this::ReadThread);
-
-    public Read() throws IOException {
-        Loggin.bungee.info("控制端口启动：" + server);
-        thread.start();
-    }
 
     private void ReadThread() {
 
@@ -58,5 +51,10 @@ public class Read {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Read() throws IOException {
+        Loggin.bungee.info("控制端口启动：" + server);
+        thread.start();
     }
 }

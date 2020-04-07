@@ -1,16 +1,18 @@
 package cn.mcres.karlatemp.mojangyggdrasil;
 
 import cn.mcres.karlatemp.mojangyggdrasil.Config.MainConfig;
-import cn.mcres.karlatemp.mojangyggdrasil.Inject.NetWork;
 import cn.mcres.karlatemp.mojangyggdrasil.Inject.Sign;
+import cn.mcres.karlatemp.mojangyggdrasil.Inject.NetWork;
 import cn.mcres.karlatemp.mojangyggdrasil.Inject.UListener;
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj.ConfigObj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Config_Obj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Properties;
 import cn.mcres.karlatemp.mojangyggdrasil.bungeecord.BCSupport;
 
 import java.lang.instrument.Instrumentation;
 import java.net.URLStreamHandler;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +24,7 @@ public class Main {
     public static URLStreamHandler http;
     public static URLStreamHandler https;
 
-    public static ConfigObj Config;
+    public static Config_Obj Config;
 
     private static void inject(final String rootx) {
         final String root = www(rootx);
@@ -59,12 +61,13 @@ public class Main {
     private static void bootstart(Instrumentation i, String opt) {
         Loggin.boot.info("Welcome to use MojangYggdrasil");
         Loggin.boot.info("Version: " + Main.class.getPackage().getImplementationVersion());
+        Loggin.boot.info("Author: Karla" + "temp. QQ: 3279826484.");
         Loggin.boot.info("Loading config...");
         MainConfig.loadconfig();
         opt = www(opt);
         Loggin.conf.info("Yggdrasil ROOT: " + opt);
         inject(opt);
-        BCSupport.inject(i);
+        BCSupport.inject(i, opt);
         Sign.inject();
     }
 

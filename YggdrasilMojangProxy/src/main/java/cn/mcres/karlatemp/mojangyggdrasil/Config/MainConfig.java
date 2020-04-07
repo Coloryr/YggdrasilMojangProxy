@@ -2,8 +2,8 @@ package cn.mcres.karlatemp.mojangyggdrasil.Config;
 
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
 import cn.mcres.karlatemp.mojangyggdrasil.Main;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj.ConfigObj;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj.PlayerSaveObj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Config_Obj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Player_save_Obj;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayInputStream;
@@ -27,7 +27,7 @@ public class MainConfig {
 
     public static void loadconfig() {
         try {
-            File file = new File(System.getProperty("user.dir") + "/config_j.json");
+            File file = new File(System.getProperty("user.dir") + "/config.json");
             PlayerConfig.file = new File(System.getProperty("user.dir") + "/player_save.json");
             if (!file.exists()) {
                 InputStream in = new ByteArrayInputStream(config.getBytes());
@@ -38,24 +38,24 @@ public class MainConfig {
                 Files.copy(in, PlayerConfig.file.toPath());
             }
 
-            Main.Config = new Gson().fromJson(new FileReader(file), ConfigObj.class);
-            PlayerConfig.playerUuid = new Gson().fromJson(new FileReader(PlayerConfig.file), PlayerSaveObj.class);
+            Main.Config = new Gson().fromJson(new FileReader(file), Config_Obj.class);
+            PlayerConfig.playerUuid = new Gson().fromJson(new FileReader(PlayerConfig.file), Player_save_Obj.class);
 
             if (Main.Config == null) {
-                Main.Config = new ConfigObj(25566);
+                Main.Config = new Config_Obj(25566);
                 InputStream in = new ByteArrayInputStream(new Gson().toJson(Main.Config).getBytes(StandardCharsets.UTF_8));
                 Files.copy(in, file.toPath());
             }
 
             if (PlayerConfig.playerUuid == null) {
-                PlayerConfig.playerUuid = new PlayerSaveObj();
+                PlayerConfig.playerUuid = new Player_save_Obj();
                 InputStream in = new ByteArrayInputStream(new Gson().toJson(PlayerConfig.playerUuid).getBytes(StandardCharsets.UTF_8));
                 Files.copy(in, PlayerConfig.file.toPath());
             }
 
         } catch (Exception e) {
             Loggin.boot.warning("The config load fail");
-            Main.Config = new ConfigObj(25566);
+            Main.Config = new Config_Obj(25566);
         }
     }
 }

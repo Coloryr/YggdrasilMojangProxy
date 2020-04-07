@@ -1,15 +1,13 @@
 package cn.mcres.karlatemp.mojangyggdrasil.Config;
 
-import cn.mcres.karlatemp.mojangyggdrasil.Obj.PlayerSaveObj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Player_save_Obj;
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.UUID;
 
 public class PlayerConfig {
-    public static PlayerSaveObj playerUuid = new PlayerSaveObj();
+    public static Player_save_Obj playerUuid = new Player_save_Obj();
     public static File file;
 
     public static String getUUID(String id, String uuid) {

@@ -1,4 +1,4 @@
-package cn.mcres.karlatemp.mojangyggdrasil.Obj;
+package cn.mcres.karlatemp.mojangyggdrasil.Obj_save;
 
 public class Properties {
 
@@ -6,27 +6,27 @@ public class Properties {
     private String value;
     private String signature;
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
 
     public void setValue(String value) {
         this.value = value;
     }
 
-    public String getSignature() {
-        return signature;
+    public String getValue() {
+        return value;
     }
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getSignature() {
+        return signature;
     }
 }

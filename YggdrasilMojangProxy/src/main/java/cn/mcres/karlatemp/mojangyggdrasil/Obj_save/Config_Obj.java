@@ -1,9 +1,9 @@
-package cn.mcres.karlatemp.mojangyggdrasil.Obj;
+package cn.mcres.karlatemp.mojangyggdrasil.Obj_save;
 
-public class ConfigObj {
+public class Config_Obj {
     private int Port;
 
-    public ConfigObj(int Port) {
+    public Config_Obj(int Port) {
         this.Port = Port;
     }
 
