@@ -149,7 +149,6 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
                 temp = new Gson().toJson(obj);
                 out.write(temp.getBytes());
                 Loggin.boot.info("玩家：" + obj.getName() + " UUID:" + obj.getId());
-                out.write(temp.getBytes());
             } else {
                 out.write("{}".getBytes());
             }

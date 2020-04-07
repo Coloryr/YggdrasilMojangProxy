@@ -78,14 +78,9 @@ public class UListener extends URLStreamHandler {
     }
 
     private static byte[] readAll(InputStream is) throws IOException {
-        ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        byte[] array = new byte[2048];
-        while (true) {
-            int i = is.read(array);
-            if (i == -1) break;
-            bs.write(array, 0, i);
-        }
-        return bs.toByteArray();
+        byte[] array = new byte[is.available()];
+        is.read(array);
+        return array;
     }
 
     private void Do(URL url, Proxy proxy, Store<URLConnection> store, URLStreamHandler http) {
