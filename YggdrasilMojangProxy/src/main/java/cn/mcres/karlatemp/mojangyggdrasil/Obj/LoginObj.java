@@ -1,8 +1,8 @@
-package cn.mcres.karlatemp.mojangyggdrasil.Obj_save;
+package cn.mcres.karlatemp.mojangyggdrasil.Obj;
 
 import java.util.List;
 
-public class Login_Obj {
+public class LoginObj {
 
     private String id;
     private String name;

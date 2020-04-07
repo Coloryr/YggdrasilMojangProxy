@@ -1,4 +1,4 @@
-package cn.mcres.karlatemp.mojangyggdrasil.Obj_save;
+package cn.mcres.karlatemp.mojangyggdrasil.Obj;
 
 public class Properties {
 

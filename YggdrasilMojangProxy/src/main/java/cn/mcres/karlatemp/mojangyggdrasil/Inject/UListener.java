@@ -1,16 +1,19 @@
 package cn.mcres.karlatemp.mojangyggdrasil.Inject;
 
+import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
+import cn.mcres.karlatemp.mojangyggdrasil.Main;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
+import java.net.*;
 
 public class UListener extends URLStreamHandler {
     private static final Method a, b;
+    public static String root;
 
     static {
         Method c = null, d = null;
@@ -27,12 +30,10 @@ public class UListener extends URLStreamHandler {
 
     private final int defport;
     private final URLStreamHandler parent;
-    private final StreamHandler h;
 
-    public UListener(int defport, URLStreamHandler parent, StreamHandler sh) {
+    public UListener(int defport, URLStreamHandler parent) {
         this.defport = defport;
         this.parent = parent;
-        h = sh;
     }
 
     private static URLConnection open(URLStreamHandler handler, URL u, Proxy p) throws IOException {
@@ -59,7 +60,7 @@ public class UListener extends URLStreamHandler {
     @Override
     protected URLConnection openConnection(URL u, Proxy p) throws IOException {
         Store<URLConnection> connect = new Store<>();
-        h.run(this, u, p, connect);
+        Do(u, p, connect, parent);
         if (connect.value != null) return connect.value;
         return open(parent, u, p);
     }
@@ -67,16 +68,73 @@ public class UListener extends URLStreamHandler {
     @Override
     protected URLConnection openConnection(URL u) throws IOException {
         Store<URLConnection> connect = new Store<>();
-        h.run(this, u, null, connect);
+        Do(u, null, connect, parent);
         if (connect.value != null) return connect.value;
         return open(parent, u, null);
     }
 
-    public interface StreamHandler {
-        void run(UListener listener, URL u, Proxy p, Store<URLConnection> uc) throws IOException;
-    }
-
     public static class Store<T> {
         T value;
+    }
+
+    private static byte[] readAll(InputStream is) throws IOException {
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        byte[] array = new byte[2048];
+        while (true) {
+            int i = is.read(array);
+            if (i == -1) break;
+            bs.write(array, 0, i);
+        }
+        return bs.toByteArray();
+    }
+
+    private void Do(URL url, Proxy proxy, Store<URLConnection> store, URLStreamHandler http) {
+        final String ef = url.toExternalForm();
+        if (ef.startsWith(root)) {
+            String opt = ef.substring(root.length());
+            if (opt.startsWith("sessionserver/session/minecraft/hasJoined")) {
+                int respone = 0;
+                try {
+                    Loggin.boot.info("尝试设置的地址登录");
+                    //从设置的服务器验证
+                    URL x = new URL(null, url.toExternalForm(), http);
+                    URLConnection connect;
+                    if (proxy == null) connect = x.openConnection();
+                    else connect = x.openConnection(proxy);
+                    HttpURLConnection huc = (HttpURLConnection) connect;
+                    Loggin.boot.info("服务器返回：" + huc.getResponseCode());
+                    Loggin.boot.info("服务器返回：" + huc.getResponseMessage());
+                    if ((respone = huc.getResponseCode()) == 200) {
+                        final byte[] got = readAll(huc.getInputStream());
+                        store.value = new BuffedHttpConnection(url, got);
+                        return;
+                    }
+                    huc.disconnect();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+                try {
+                    Loggin.boot.info("尝试正版登录");
+                    //从正版服务器验证
+                    URL mojang = new URL(null, Main.mojangHasJoined + "?" + url.getQuery(), Main.https);
+                    URLConnection connect;
+                    if (proxy == null) connect = mojang.openConnection();
+                    else connect = mojang.openConnection(proxy);
+                    HttpURLConnection huc = (HttpURLConnection) connect;
+                    Loggin.boot.info("服务器返回：" + huc.getResponseCode());
+                    Loggin.boot.info("服务器返回：" + huc.getResponseMessage());
+                    if ((respone = huc.getResponseCode()) == 200) {
+                        final byte[] got = readAll(huc.getInputStream());
+                        store.value = new BuffedHttpConnection(mojang, got);
+                    }
+                    huc.disconnect();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+                if (store.value == null) {
+                    store.value = new BuffedHttpConnection(url, new byte[0], respone);
+                }
+            }
+        }
     }
 }

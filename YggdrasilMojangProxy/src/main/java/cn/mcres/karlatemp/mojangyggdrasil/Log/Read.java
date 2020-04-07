@@ -2,7 +2,7 @@ package cn.mcres.karlatemp.mojangyggdrasil.Log;
 
 import cn.mcres.karlatemp.mojangyggdrasil.Config.MainConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.SocketObj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj.SocketObj;
 import com.google.gson.Gson;
 
 import java.io.*;

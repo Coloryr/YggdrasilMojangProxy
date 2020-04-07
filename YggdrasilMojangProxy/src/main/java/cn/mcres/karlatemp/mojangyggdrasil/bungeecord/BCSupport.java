@@ -3,8 +3,7 @@ package cn.mcres.karlatemp.mojangyggdrasil.bungeecord;
 import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
 import cn.mcres.karlatemp.mojangyggdrasil.Main;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Login_Obj;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Properties;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj.LoginObj;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -12,7 +11,6 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
 import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -73,7 +71,7 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         return nw;
     }
 
-    public static void inject(Instrumentation i, String opt) {
+    public static void inject(Instrumentation i) {
         BCSupport bc = new BCSupport();
         bc.port = Main.Config.getPort();
         new Thread(() -> {
@@ -85,7 +83,7 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
     @Override
     public byte[] transform(ClassLoader loader, String className,
                             Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
-                            byte[] classfileBuffer) throws IllegalClassFormatException {
+                            byte[] classfileBuffer) {
         if (className != null) {
             if (className.startsWith("net/md_5/bungee/")) {
                 if (!rooted) {
@@ -138,24 +136,23 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         final HttpURLConnection http = (HttpURLConnection) uc;
         int i = http.getResponseCode();
         httpExchange.sendResponseHeaders(i, 0);
+        OutputStream out = httpExchange.getResponseBody();
         if (i == 200) {
             InputStream io = http.getInputStream();
             byte[] buff = new byte[io.available()];
-            OutputStream out = httpExchange.getResponseBody();
             io.read(buff);
             String temp = new String(buff);
-
-            Login_Obj obj = new Gson().fromJson(temp, Login_Obj.class);
+            LoginObj obj = new Gson().fromJson(temp, LoginObj.class);
             String uuid = PlayerConfig.getUUID(obj.getName(), obj.getId());
-            if (PlayerConfig.isBan(obj.getName(), uuid)) {
-                httpExchange.close();
-                return;
+            if (!PlayerConfig.isBan(obj.getName(), uuid)) {
+                obj.setId(uuid);
+                temp = new Gson().toJson(obj);
+                out.write(temp.getBytes());
+                Loggin.boot.info("玩家：" + obj.getName() + " UUID:" + obj.getId());
+                out.write(temp.getBytes());
+            } else {
+                out.write("{}".getBytes());
             }
-
-            obj.setId(uuid);
-            temp = new Gson().toJson(obj);
-
-            out.write(temp.getBytes());
         }
         httpExchange.close();
     }
