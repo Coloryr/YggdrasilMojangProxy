@@ -1,11 +1,11 @@
-package cn.mcres.karlatemp.mojangyggdrasil.Obj_save;
+package cn.mcres.karlatemp.mojangyggdrasil.Obj;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Player_save_Obj {
+public class PlayerSaveObj {
     private Map<String, String> players = new HashMap<>();
     private List<String> banID = new ArrayList<>();
     private List<String> banUUID = new ArrayList<>();

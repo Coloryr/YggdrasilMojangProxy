@@ -3,16 +3,17 @@ package cn.mcres.karlatemp.mojangyggdrasil.bungeecord;
 import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
 import cn.mcres.karlatemp.mojangyggdrasil.Main;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Login_Obj;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj_save.Properties;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj.LoginObj;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,10 @@ import java.util.logging.Level;
 public class BCSupport implements ClassFileTransformer, HttpHandler {
 
     private static final String root = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=";
+    /**
+     * Can be replace with other yggdrasil api
+     */
+    public static String bungeePrefix = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=";
     private int port;
     private boolean rooted = false;
     private boolean booted = false;
@@ -73,11 +78,10 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         return nw;
     }
 
-    public static void inject(Instrumentation i, String opt) {
+    public static void inject(Instrumentation i) {
         BCSupport bc = new BCSupport();
         bc.port = Main.Config.getPort();
         new Thread(() -> {
-            // Wait Authlib-injector
             i.addTransformer(bc);
         }).start();
     }
@@ -85,18 +89,18 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
     @Override
     public byte[] transform(ClassLoader loader, String className,
                             Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
-                            byte[] classfileBuffer) throws IllegalClassFormatException {
+                            byte[] classfileBuffer) {
         if (className != null) {
             if (className.startsWith("net/md_5/bungee/")) {
                 if (!rooted) {
-                    Loggin.bungee.info("Yggdrasil root: " + Waitable.bungeePrefix);
+                    Loggin.bungee.info("Yggdrasil root: " + bungeePrefix);
                     rooted = true;
                 }
             }
             if (className.equals("net/md_5/bungee/connection/InitialHandler")) {
                 Loggin.bungee.info("Check up BungeeCord mode..");
                 startup();
-                byte[] replaced = replace(classfileBuffer, root, "http://127.0.0.1:" + port + "/?username=");
+                byte[] replaced = replace(classfileBuffer, root, "http://localhost:" + port + "/?username=");
                 if (Arrays.equals(replaced, classfileBuffer)) {
                     Loggin.bungee.severe("Error: Cannot transform BungeeCord!");
                 }
@@ -132,7 +136,7 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         final URI uri = httpExchange.getRequestURI();
-        String bungeePrefix = Waitable.bungeePrefix;
+        String bungeePrefix = BCSupport.bungeePrefix;
         final URL url = new URL(bungeePrefix.substring(0, bungeePrefix.length() - 9) + uri.getQuery());
         final URLConnection uc = url.openConnection(Proxy.NO_PROXY);
         final HttpURLConnection http = (HttpURLConnection) uc;
@@ -144,8 +148,7 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
             OutputStream out = httpExchange.getResponseBody();
             io.read(buff);
             String temp = new String(buff);
-
-            Login_Obj obj = new Gson().fromJson(temp, Login_Obj.class);
+            LoginObj obj = new Gson().fromJson(temp, LoginObj.class);
             String uuid = PlayerConfig.getUUID(obj.getName(), obj.getId());
             if (PlayerConfig.isBan(obj.getName(), uuid)) {
                 httpExchange.close();

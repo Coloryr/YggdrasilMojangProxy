@@ -36,8 +36,6 @@ dependencies {
 
     compile 'net.md-5:bungeecord-api:1.15-SNAPSHOT'
 
-    compile 'fr.xephi:authme:5.6.0-SNAPSHOT'
-
     compile 'com.mojang:authlib:1.5.24'
 }
 
@@ -48,7 +46,7 @@ tasks.withType(JavaCompile) {
 jar {
     manifest {
         attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                //'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
                 'Main-Class': 'cn.mcres.karlatemp.mojangyggdrasil.Main',
                 "Implementation-Title": "Gradle",
                 "Premain-Class": "cn.mcres.karlatemp.mojangyggdrasil.Main"
