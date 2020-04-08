@@ -10,6 +10,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
+import java.util.Optional;
 
 public class UListener extends URLStreamHandler {
     private static final Method a, b;
@@ -83,6 +84,27 @@ public class UListener extends URLStreamHandler {
         return array;
     }
 
+    private boolean Conn(URL url, Proxy proxy, Store<URLConnection> store) throws IOException {
+        URLConnection connect;
+        if (proxy == null) connect = url.openConnection();
+        else connect = url.openConnection(proxy);
+        connect.setConnectTimeout(6500);
+        connect.setReadTimeout(6500);
+        HttpURLConnection huc = (HttpURLConnection) connect;
+        int re = huc.getResponseCode();
+        String message = huc.getResponseMessage();
+        Loggin.boot.info("服务器返回：" + re);
+        Loggin.boot.info("服务器返回：" + message);
+        if (re == 200) {
+            final byte[] got = readAll(huc.getInputStream());
+            store.value = new BuffedHttpConnection(url, got);
+            huc.disconnect();
+            return true;
+        }
+        huc.disconnect();
+        return false;
+    }
+
     private void Do(URL url, Proxy proxy, Store<URLConnection> store, URLStreamHandler http) {
         final String ef = url.toExternalForm();
         if (ef.startsWith(root)) {
@@ -93,18 +115,8 @@ public class UListener extends URLStreamHandler {
                     Loggin.boot.info("尝试设置的地址登录");
                     //从设置的服务器验证
                     URL x = new URL(null, url.toExternalForm(), http);
-                    URLConnection connect;
-                    if (proxy == null) connect = x.openConnection();
-                    else connect = x.openConnection(proxy);
-                    HttpURLConnection huc = (HttpURLConnection) connect;
-                    Loggin.boot.info("服务器返回：" + huc.getResponseCode());
-                    Loggin.boot.info("服务器返回：" + huc.getResponseMessage());
-                    if ((respone = huc.getResponseCode()) == 200) {
-                        final byte[] got = readAll(huc.getInputStream());
-                        store.value = new BuffedHttpConnection(url, got);
+                    if (Conn(x, proxy, store))
                         return;
-                    }
-                    huc.disconnect();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
@@ -112,17 +124,8 @@ public class UListener extends URLStreamHandler {
                     Loggin.boot.info("尝试正版登录");
                     //从正版服务器验证
                     URL mojang = new URL(null, Main.mojangHasJoined + "?" + url.getQuery(), Main.https);
-                    URLConnection connect;
-                    if (proxy == null) connect = mojang.openConnection();
-                    else connect = mojang.openConnection(proxy);
-                    HttpURLConnection huc = (HttpURLConnection) connect;
-                    Loggin.boot.info("服务器返回：" + huc.getResponseCode());
-                    Loggin.boot.info("服务器返回：" + huc.getResponseMessage());
-                    if ((respone = huc.getResponseCode()) == 200) {
-                        final byte[] got = readAll(huc.getInputStream());
-                        store.value = new BuffedHttpConnection(mojang, got);
-                    }
-                    huc.disconnect();
+                    if (Conn(mojang, proxy, store))
+                        return;
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
