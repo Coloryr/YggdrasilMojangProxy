@@ -1,4 +1,7 @@
 # MojangYggdrasil(Color_yr edit)
+## 不知道为什么fork的丢了，这里说明
+## https://github.com/Karlatemp/YggdrasilMojangProxy
+## 这是原作者的作品
 统一和正版混合登录  
 只支持在BC上部署
 ```
