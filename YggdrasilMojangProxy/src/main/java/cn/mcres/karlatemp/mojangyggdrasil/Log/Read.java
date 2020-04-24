@@ -15,23 +15,30 @@ public class Read {
             } else if (obj.getDo().equalsIgnoreCase("AddBanID")) {
                 if (!obj.getID().isEmpty()) {
                     PlayerConfig.AddBanID(obj.getID());
-                    Loggin.boot.info("已禁封ID：" + obj.getID());
+                    String temp = "已禁封ID：" + obj.getID();
+                    Loggin.boot.info(temp);
+                    return temp;
                 } else if (!obj.getUUID().isEmpty()) {
                     PlayerConfig.AddBanUUID(obj.getUUID());
-                    Loggin.boot.info("已禁封UUID：" + obj.getUUID().replaceAll("-", ""));
+                    String temp = "已禁封UUID：" + obj.getUUID().replaceAll("-", "");
+                    Loggin.boot.info(temp);
+                    return temp;
                 } else {
-                    Loggin.boot.info("无法添加空ID");
+                    return "无法添加空ID";
                 }
             } else if (obj.getDo().equalsIgnoreCase("SetPlayer")) {
                 if (obj.getID().isEmpty() && obj.getUUID().isEmpty()) {
-                    Loggin.boot.info("无法修改空ID");
+                    return "无法添加空ID";
                 } else {
                     PlayerConfig.AddPlayer(obj.getID(), obj.getUUID().replaceAll("-", ""));
-                    Loggin.boot.info("已设置" + obj.getID() + "的UUID为：" + obj.getUUID());
+                    String temp = "已设置" + obj.getID() + "的UUID为：" + obj.getUUID();
+                    Loggin.boot.info(temp);
+                    return temp;
+
                 }
             } else if (obj.getDo().equalsIgnoreCase("ReSkin")) {
                 if (obj.getID().isEmpty()) {
-                    Loggin.boot.info("刷新皮肤失败");
+                    return "刷新皮肤失败";
                 } else {
                     PlayerConfig.RemoveSkin(obj.getID());
                     String temp = "刷新" + obj.getID() + "刷新皮肤成功，重进服务器后生效";
