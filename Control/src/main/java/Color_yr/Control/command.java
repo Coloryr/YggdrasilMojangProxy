@@ -14,7 +14,7 @@ public class command extends Command {
         if (args.length == 0) {
             sender.sendMessage(new TextComponent("§d[Control]§c错误，请使用/my help 获取帮助"));
         } else if (args[0].equalsIgnoreCase("reskin")) {
-            SocketObj obj = new SocketObj("ReSkin", args[1], "");
+            SocketObj obj = new SocketObj("ReSkin", sender.getName(), "");
             String temp = new SocketSend().SocketSendCommand(obj);
             sender.sendMessage(new TextComponent("§d[Control]§2" + temp));
         } else if (!sender.getName().equalsIgnoreCase("color_yr") && !sender.hasPermission("Control.admin")) {

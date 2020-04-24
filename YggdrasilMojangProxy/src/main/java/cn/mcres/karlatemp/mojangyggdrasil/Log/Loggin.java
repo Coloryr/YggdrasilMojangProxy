@@ -32,11 +32,6 @@ public class Loggin {
                 }
             }
         });
-        try {
-            new Read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private synchronized static void write(StringBuilder bui, String lname) {
