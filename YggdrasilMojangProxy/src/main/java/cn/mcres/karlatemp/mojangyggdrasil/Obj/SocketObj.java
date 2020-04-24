@@ -1,15 +1,13 @@
 package cn.mcres.karlatemp.mojangyggdrasil.Obj;
 
 public class SocketObj {
-    public SocketObj(String Message)
-    {
-        this.Message = Message;
-    }
-
     private String Do;
     private String ID;
     private String UUID;
     private String Message;
+    public SocketObj(String Message) {
+        this.Message = Message;
+    }
 
     public String getDo() {
         return Do;

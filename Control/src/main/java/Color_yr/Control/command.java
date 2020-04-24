@@ -4,41 +4,30 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.util.regex.Pattern;
-
 public class command extends Command {
 
     command() {
         super("my");
     }
 
-    private boolean isInteger(String str) {
-        Pattern pattern = Pattern.compile("^[-+]?[\\d]*$");
-        return pattern.matcher(str).matches();
-    }
-
-    private String get_string(String a, String b, String c) {
-        int x = a.indexOf(b) + b.length();
-        int y;
-        if (c != null)
-            y = a.indexOf(c);
-        else y = a.length();
-        return a.substring(x, y);
-    }
-
     public void execute(CommandSender sender, String[] args) {
-        if (!sender.getName().equalsIgnoreCase("color_yr") && !sender.hasPermission("Control.admin")) {
-            sender.sendMessage(new TextComponent("§d[Control]§c禁止使用该指令"));
-            return;
-        }
         if (args.length == 0) {
             sender.sendMessage(new TextComponent("§d[Control]§c错误，请使用/my help 获取帮助"));
+        } else if (args[0].equalsIgnoreCase("reskin")) {
+            SocketObj obj = new SocketObj("ReSkin", args[1], "");
+            String temp = new SocketSend().SocketSendCommand(obj);
+            sender.sendMessage(new TextComponent("§d[Control]§2" + temp));
+        } else if (!sender.getName().equalsIgnoreCase("color_yr") && !sender.hasPermission("Control.admin")) {
+            sender.sendMessage(new TextComponent("§d[Control]§c禁止使用该指令"));
         } else if (args[0].equalsIgnoreCase("help")) {
             sender.sendMessage(new TextComponent("§d[Control]§2帮助手册"));
-            sender.sendMessage(new TextComponent("§d[Control]§2使用/my reload 来重载UUID缓存"));
-            sender.sendMessage(new TextComponent("§d[Control]§2使用/my banID [ID] 禁用ID"));
-            sender.sendMessage(new TextComponent("§d[Control]§2使用/my banUUID [UUID] 禁用UUID"));
-            sender.sendMessage(new TextComponent("§d[Control]§2使用/my SetPlayer [ID] [UUID] 设置玩家ID和UUID"));
+            sender.sendMessage(new TextComponent("§d[Control]§2使用/my reskin 来刷新你的皮肤"));
+            if (sender.getName().equalsIgnoreCase("color_yr") || sender.hasPermission("Control.admin")) {
+                sender.sendMessage(new TextComponent("§d[Control]§2使用/my reload 来重载UUID缓存"));
+                sender.sendMessage(new TextComponent("§d[Control]§2使用/my banID [ID] 禁用ID"));
+                sender.sendMessage(new TextComponent("§d[Control]§2使用/my banUUID [UUID] 禁用UUID"));
+                sender.sendMessage(new TextComponent("§d[Control]§2使用/my SetPlayer [ID] [UUID] 设置玩家ID和UUID"));
+            }
         } else if (args[0].equalsIgnoreCase("reload")) {
             SocketObj obj = new SocketObj("reload", "", "");
             new SocketSend().SocketSendCommand(obj);

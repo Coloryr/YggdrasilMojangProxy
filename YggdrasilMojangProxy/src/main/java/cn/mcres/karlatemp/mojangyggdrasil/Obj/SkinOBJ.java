@@ -5,6 +5,7 @@ import java.util.List;
 public class SkinOBJ {
     private List<Properties> skin;
     private int pox;
+
     public int getPox() {
         return pox;
     }

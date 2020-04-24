@@ -5,13 +5,22 @@ import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.SocketObj;
 import com.google.gson.Gson;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class Read {
     final ServerSocket server = new ServerSocket(123);
     final Thread thread = new Thread(this::ReadThread);
+
+    public Read() throws IOException {
+        Loggin.boot.info("控制端口启动：" + server);
+        thread.start();
+    }
 
     private void ReadThread() {
 
@@ -43,7 +52,20 @@ public class Read {
                             PlayerConfig.AddPlayer(obj.getID(), obj.getUUID().replaceAll("-", ""));
                             Loggin.boot.info("已设置" + obj.getID() + "的UUID为：" + obj.getUUID());
                         }
+                    } else if (obj.getDo().equalsIgnoreCase("ReSkin")) {
+                        if (obj.getID().isEmpty()) {
+                            Loggin.boot.info("刷新刷新皮肤失败");
+                        } else {
+                            PlayerConfig.RemoveSkin(obj.getID());
+                            String temp = "刷新" + obj.getID() + "刷新皮肤成功，重进服务器后生效";
+                            Loggin.boot.info(temp);
+                            OutputStream out = socket.getOutputStream();
+                            out.write(temp.getBytes(StandardCharsets.UTF_8));
+                            out.flush();
+                            out.close();
+                        }
                     }
+                    socket.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -51,10 +73,5 @@ public class Read {
                 e.printStackTrace();
             }
         }
-    }
-
-    public Read() throws IOException {
-        Loggin.boot.info("控制端口启动：" + server);
-        thread.start();
     }
 }

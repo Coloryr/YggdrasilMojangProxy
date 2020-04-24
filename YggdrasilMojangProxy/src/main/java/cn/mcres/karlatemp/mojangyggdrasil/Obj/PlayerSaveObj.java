@@ -11,6 +11,10 @@ public class PlayerSaveObj {
     private List<String> banUUID = new ArrayList<>();
     private Map<String, SkinOBJ> skin = new HashMap<>();
 
+    public void removeSkin(String player) {
+        skin.remove(player);
+    }
+
     public void setSkin(String player, SkinOBJ skin1) {
         skin.put(player, skin1);
     }

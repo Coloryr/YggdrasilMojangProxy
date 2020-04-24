@@ -4,22 +4,22 @@ import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
 import cn.mcres.karlatemp.mojangyggdrasil.Main;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.LoginObj;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj.Properties;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.SkinOBJ;
 import com.google.gson.Gson;
-import com.google.gson.internal.$Gson$Preconditions;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 
 public class BCSupport implements ClassFileTransformer, HttpHandler {
@@ -83,6 +83,12 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         }).start();
     }
 
+    private static byte[] readAll(InputStream is) throws IOException {
+        byte[] array = new byte[is.available()];
+        is.read(array);
+        return array;
+    }
+
     @Override
     public byte[] transform(ClassLoader loader, String className,
                             Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
@@ -123,12 +129,6 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
         } catch (IOException ioe) {
             Loggin.boot.log(Level.SEVERE, ioe.getMessage(), ioe);
         }
-    }
-
-    private static byte[] readAll(InputStream is) throws IOException {
-        byte[] array = new byte[is.available()];
-        is.read(array);
-        return array;
     }
 
     private String Conn(URL url) throws IOException {

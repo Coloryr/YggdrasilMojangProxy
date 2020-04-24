@@ -2,12 +2,14 @@ package cn.mcres.karlatemp.mojangyggdrasil.Config;
 
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.PlayerSaveObj;
-import cn.mcres.karlatemp.mojangyggdrasil.Obj.Properties;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.SkinOBJ;
 import com.google.gson.Gson;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlayerConfig {
     public static PlayerSaveObj playerUuid = new PlayerSaveObj();
@@ -23,6 +25,11 @@ public class PlayerConfig {
             AddPlayer(id, uuid);
             return uuid;
         }
+    }
+
+    public static void RemoveSkin(String player) {
+        playerUuid.removeSkin(player);
+        save();
     }
 
     public static SkinOBJ getSKin(String player) {

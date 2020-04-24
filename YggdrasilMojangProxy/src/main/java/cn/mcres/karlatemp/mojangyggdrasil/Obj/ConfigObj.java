@@ -5,6 +5,10 @@ public class ConfigObj {
     private int Priority;
     private String Address;
 
+    public ConfigObj(int Port) {
+        this.Port = Port;
+    }
+
     public int getPriority() {
         return Priority;
     }
@@ -15,10 +19,6 @@ public class ConfigObj {
 
     public void setAddress(String address) {
         Address = address;
-    }
-
-    public ConfigObj(int Port) {
-        this.Port = Port;
     }
 
     public int getPort() {

@@ -6,27 +6,27 @@ public class Properties {
     private String value;
     private String signature;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getValue() {
         return value;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getSignature() {
         return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 }

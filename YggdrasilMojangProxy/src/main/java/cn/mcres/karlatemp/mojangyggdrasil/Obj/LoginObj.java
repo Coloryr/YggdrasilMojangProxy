@@ -8,27 +8,27 @@ public class LoginObj {
     private String name;
     private List<Properties> properties;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setProperties(List<Properties> properties) {
-        this.properties = properties;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Properties> getProperties() {
         return properties;
+    }
+
+    public void setProperties(List<Properties> properties) {
+        this.properties = properties;
     }
 }

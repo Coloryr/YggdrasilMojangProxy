@@ -1,13 +1,13 @@
 package Color_yr.Control;
 
 import com.google.gson.Gson;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class SocketSend {
-    public void SocketSendCommand(SocketObj obj) {
+    public String SocketSendCommand(SocketObj obj) {
         try {
             if (!obj.getDo().isEmpty()) {
                 Socket socket = new Socket("127.0.0.1", Control.Port);
@@ -16,10 +16,14 @@ public class SocketSend {
                 out.write(data);
                 out.flush();
                 out.close();
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+                String temp = in.readLine();
                 socket.close();
+                return temp;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "错误";
     }
 }
