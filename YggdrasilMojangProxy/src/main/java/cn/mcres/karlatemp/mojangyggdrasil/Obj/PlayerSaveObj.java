@@ -9,6 +9,15 @@ public class PlayerSaveObj {
     private Map<String, String> players = new HashMap<>();
     private List<String> banID = new ArrayList<>();
     private List<String> banUUID = new ArrayList<>();
+    private Map<String, SkinOBJ> skin = new HashMap<>();
+
+    public void setSkin(String player, SkinOBJ skin1) {
+        skin.put(player, skin1);
+    }
+
+    public SkinOBJ getSkin(String player) {
+        return skin.get(player);
+    }
 
     public Map<String, String> getPlayers() {
         return players;
@@ -24,6 +33,10 @@ public class PlayerSaveObj {
 
     public void AddPlayers(String id, String uuid) {
         players.put(id, uuid);
+    }
+
+    public void RemovePlayer(String id) {
+        players.remove(id);
     }
 
     public void AddBanID(String id) {

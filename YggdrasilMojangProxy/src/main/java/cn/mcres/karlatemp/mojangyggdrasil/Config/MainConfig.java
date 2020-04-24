@@ -24,7 +24,8 @@ public class MainConfig {
     private static final String player_save = "{\n" +
             "  \"players\" : {},\n" +
             "  \"banID\": [],\n" +
-            "  \"banUUID\": []\n" +
+            "  \"banUUID\": [],\n" +
+            "  \"skin\": {}\n" +
             "}";
 
     public static void loadconfig() {

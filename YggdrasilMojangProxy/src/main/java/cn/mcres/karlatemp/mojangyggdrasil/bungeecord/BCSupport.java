@@ -4,6 +4,8 @@ import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
 import cn.mcres.karlatemp.mojangyggdrasil.Main;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.LoginObj;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj.Properties;
+import cn.mcres.karlatemp.mojangyggdrasil.Obj.SkinOBJ;
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Preconditions;
 import com.sun.net.httpserver.HttpExchange;
@@ -17,6 +19,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 public class BCSupport implements ClassFileTransformer, HttpHandler {
@@ -200,6 +203,18 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
                 OutputStream out = httpExchange.getResponseBody();
                 String uuid = PlayerConfig.getUUID(obj.getName(), obj.getId());
                 if (!PlayerConfig.isBan(obj.getName(), uuid)) {
+                    SkinOBJ skin = PlayerConfig.getSKin(obj.getName());
+                    if (skin == null) {
+                        skin = new SkinOBJ();
+                        skin.setSkin(obj.getProperties());
+                        skin.setPox(state);
+                        PlayerConfig.SetSkin(obj.getName(), skin);
+                    } else if (skin.getPox() == state) {
+                        skin.setSkin(obj.getProperties());
+                        PlayerConfig.SetSkin(obj.getName(), skin);
+                    } else {
+                        obj.setProperties(skin.getSkin());
+                    }
                     obj.setId(uuid);
                     temp = new Gson().toJson(obj);
                     out.write(temp.getBytes());
