@@ -48,7 +48,7 @@ tasks.withType(JavaCompile) {
 jar {
     manifest {
         attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+//                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
                 'Main-Class': 'cn.mcres.karlatemp.mojangyggdrasil.Main',
                 "Implementation-Title": "Gradle",
                 "Premain-Class": "cn.mcres.karlatemp.mojangyggdrasil.Main"

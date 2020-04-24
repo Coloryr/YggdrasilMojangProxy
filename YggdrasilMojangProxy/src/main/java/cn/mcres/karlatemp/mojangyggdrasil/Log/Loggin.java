@@ -9,10 +9,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class Loggin {
-    public static final String prefix = "MojangYggdrasil";
-    public static final Logger boot = Logger.getLogger(prefix);
-    public static final Logger conf = getLogger("conf");
-    public static final Logger bungee = getLogger("bungee");
+    public static final Logger boot = Logger.getLogger("辅助登录");
     public static final PrintStream ps = System.out;
     private static final String n = "\n";
 
@@ -40,12 +37,6 @@ public class Loggin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static Logger getLogger(String suffix) {
-        Logger l = Logger.getLogger(prefix + "." + suffix);
-        l.setParent(boot);
-        return l;
     }
 
     private synchronized static void write(StringBuilder bui, String lname) {

@@ -1,3 +1,5 @@
 {
-  "Port" : 25566
+  "Port" : 25566,
+  "Address": "https://auth2.nide8.com:233/b74ac4f292e811e88feb525400b59b6a",
+  "Priority": 0
 }

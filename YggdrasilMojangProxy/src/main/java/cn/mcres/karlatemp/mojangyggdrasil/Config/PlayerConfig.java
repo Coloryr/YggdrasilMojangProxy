@@ -23,6 +23,10 @@ public class PlayerConfig {
         }
     }
 
+    public static boolean haveName(String id) {
+        return playerUuid.getPlayers().containsKey(id);
+    }
+
     public static void AddPlayer(String id, String uuid) {
         playerUuid.AddPlayers(id, uuid);
         save();

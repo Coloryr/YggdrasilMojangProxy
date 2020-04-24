@@ -16,7 +16,9 @@ import java.nio.file.Files;
 public class MainConfig {
 
     private static final String config = "{\n" +
-            "  \"Port\" : 25566\n" +
+            "  \"Port\" : 25566,\n" +
+            "  \"Address\": \"\",\n" +
+            "  \"Priority\": 0\n" +
             "}";
 
     private static final String player_save = "{\n" +
@@ -27,6 +29,7 @@ public class MainConfig {
 
     public static void loadconfig() {
         try {
+            Loggin.boot.info("加载配置中");
             File file = new File(System.getProperty("user.dir") + "/setting.json");
             PlayerConfig.file = new File(System.getProperty("user.dir") + "/player_save.json");
             if (!file.exists()) {
@@ -45,17 +48,25 @@ public class MainConfig {
                 Main.Config = new ConfigObj(25566);
                 InputStream in = new ByteArrayInputStream(new Gson().toJson(Main.Config).getBytes(StandardCharsets.UTF_8));
                 Files.copy(in, file.toPath());
+                Loggin.boot.info("请进行初始化设置再启动服务器");
+                System.exit(0);
+            }
+
+            if (Main.Config.getAddress() == null || Main.Config.getAddress().isEmpty()) {
+                Loggin.boot.info("请进行初始化设置再启动服务器");
+                System.exit(0);
             }
 
             if (PlayerConfig.playerUuid == null) {
+                Loggin.boot.info("玩家报错不存在，新建中");
                 PlayerConfig.playerUuid = new PlayerSaveObj();
                 InputStream in = new ByteArrayInputStream(new Gson().toJson(PlayerConfig.playerUuid).getBytes(StandardCharsets.UTF_8));
                 Files.copy(in, PlayerConfig.file.toPath());
             }
 
         } catch (Exception e) {
-            Loggin.boot.warning("The config load fail");
-            Main.Config = new ConfigObj(25566);
+            Loggin.boot.warning("配置文件加载失败，请检查");
+            System.exit(0);
         }
     }
 }
