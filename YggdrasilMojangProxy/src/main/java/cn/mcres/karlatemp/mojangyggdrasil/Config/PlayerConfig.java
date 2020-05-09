@@ -17,6 +17,10 @@ public class PlayerConfig {
 
     public static String getUUID(String id, String uuid) {
         if (playerUuid.getPlayers().containsKey(id)) {
+            if (playerUuid.getPlayers().get(id).isEmpty()) {
+                SetPlayer(id, uuid);
+                return uuid;
+            }
             return playerUuid.getPlayers().get(id);
         } else if (playerUuid.getPlayers().containsValue(uuid)) {
             SetPlayer(id, uuid);

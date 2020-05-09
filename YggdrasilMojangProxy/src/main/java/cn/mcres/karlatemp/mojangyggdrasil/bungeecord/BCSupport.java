@@ -181,53 +181,53 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-        if (done) {
-            boolean se = true;
+
+        try {
+            if (!done) {
+               throw new Exception();
+            }
             LoginObj obj = new Gson().fromJson(temp, LoginObj.class);
+            OutputStream out = httpExchange.getResponseBody();
+            if (PlayerConfig.isBan(obj.getName(), obj.getId())) {
+                out.write("{}".getBytes());
+                throw new Exception();
+            }
             switch (Main.Config.getPriority()) {
                 case 1:
                     if (state == 2 && !PlayerConfig.haveName(obj.getName())) {
                         Loggin.boot.info("玩家：" + obj.getName() + "没用使用设置的地址登录过");
-                        se = false;
+                        throw new Exception();
                     }
                     break;
                 case 2:
                     if (state == 1 && !PlayerConfig.haveName(obj.getName())) {
                         Loggin.boot.info("玩家：" + obj.getName() + "没用使用正版登录过");
-                        se = false;
+                        throw new Exception();
                     }
                     break;
             }
-            if (se) {
-                httpExchange.sendResponseHeaders(200, 0);
-                OutputStream out = httpExchange.getResponseBody();
-                String uuid = PlayerConfig.getUUID(obj.getName(), obj.getId());
-                if (!PlayerConfig.isBan(obj.getName(), uuid)) {
-                    SkinOBJ skin = PlayerConfig.getSKin(obj.getName());
-                    if (skin == null) {
-                        skin = new SkinOBJ();
-                        skin.setSkin(obj.getProperties());
-                        skin.setPox(state);
-                        PlayerConfig.SetSkin(obj.getName(), skin);
-                    } else if (skin.getPox() == state) {
-                        skin.setSkin(obj.getProperties());
-                        PlayerConfig.SetSkin(obj.getName(), skin);
-                    } else {
-                        obj.setProperties(skin.getSkin());
-                    }
-                    obj.setId(uuid);
-                    temp = new Gson().toJson(obj);
-                    out.write(temp.getBytes());
-                    Loggin.boot.info("玩家：" + obj.getName() + " UUID:" + obj.getId());
-                } else {
-                    out.write("{}".getBytes());
-                }
+            String uuid = PlayerConfig.getUUID(obj.getName(), obj.getId());
+            SkinOBJ skin = PlayerConfig.getSKin(obj.getName());
+            if (skin == null) {
+                skin = new SkinOBJ();
+                skin.setSkin(obj.getProperties());
+                skin.setPox(state);
+                PlayerConfig.SetSkin(obj.getName(), skin);
+            } else if (skin.getPox() == state) {
+                skin.setSkin(obj.getProperties());
+                PlayerConfig.SetSkin(obj.getName(), skin);
             } else {
-                httpExchange.sendResponseHeaders(204, 0);
+                obj.setProperties(skin.getSkin());
             }
-        } else {
+            obj.setId(uuid);
+            temp = new Gson().toJson(obj);
+            httpExchange.sendResponseHeaders(200, 0);
+            out.write(temp.getBytes());
+            Loggin.boot.info("玩家：" + obj.getName() + " UUID:" + obj.getId());
+        } catch (Exception e) {
             httpExchange.sendResponseHeaders(204, 0);
+        } finally {
+            httpExchange.close();
         }
-        httpExchange.close();
     }
 }

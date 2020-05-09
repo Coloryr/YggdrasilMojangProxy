@@ -1,15 +1,21 @@
 package cn.mcres.karlatemp.mojangyggdrasil.Obj;
 
 public class SocketObj {
-    private String Do;
-    private String ID;
-    private String UUID;
-    private String Message;
-    public SocketObj(String Message) {
-        this.Message = Message;
+    public enum Fun
+    {
+        ReSkin,Reload,AddBanID,SetPlayer,AddPlayer
     }
 
-    public String getDo() {
+    private Fun Do;
+    private String ID;
+    private String UUID;
+    public SocketObj(Fun Do, String ID, String UUID) {
+        this.Do = Do;
+        this.ID = ID;
+        this.UUID = UUID;
+    }
+
+    public Fun getDo() {
         return Do;
     }
 
@@ -19,9 +25,5 @@ public class SocketObj {
 
     public String getUUID() {
         return UUID;
-    }
-
-    public String getMessage() {
-        return Message;
     }
 }

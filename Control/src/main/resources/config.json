@@ -1,4 +1,4 @@
 {
   "Port" : 123,
-  "Skin" : {}
+  "Admin" : ["Color_yr"]
 }
