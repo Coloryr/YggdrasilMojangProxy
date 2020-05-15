@@ -60,7 +60,7 @@ public class command extends Command {
             String temp = Read.ReadThread(obj);
             sender.sendMessage(new TextComponent("§d[Control]§2" + temp));
         } else if (args[0].equalsIgnoreCase("AddPlayer")) {
-            if (args.length != 3) {
+            if (args.length != 2) {
                 sender.sendMessage(new TextComponent("§d[Control]§c错误，请使用/my help 获取帮助"));
                 return;
             }
