@@ -79,6 +79,16 @@ public class PlayerConfig {
         save();
     }
 
+    public static void RemoveBanID(String id) {
+        playerUuid.RemoveBanID(id);
+        save();
+    }
+
+    public static void RemoveBanUUID(String uuid) {
+        playerUuid.RemoveBanUUID(uuid);
+        save();
+    }
+
     private static void save() {
         try {
             String data = new Gson().toJson(playerUuid);

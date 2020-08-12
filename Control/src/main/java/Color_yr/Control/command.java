@@ -51,7 +51,23 @@ public class command extends Command {
             SocketObj obj = new SocketObj(SocketObj.Fun.AddBanID, "", args[1]);
             String temp = Read.ReadThread(obj);
             sender.sendMessage(new TextComponent("§d[Control]§2" + temp));
-        } else if (args[0].equalsIgnoreCase("SetPlayer")) {
+        } else if (args[0].equalsIgnoreCase("unbanID")) {
+            if (args.length != 2) {
+                sender.sendMessage(new TextComponent("§d[Control]§c错误，请使用/my help 获取帮助"));
+                return;
+            }
+            SocketObj obj = new SocketObj(SocketObj.Fun.RemoveBanID, args[1], "");
+            String temp = Read.ReadThread(obj);
+            sender.sendMessage(new TextComponent("§d[Control]§2" + temp));
+        } else if (args[0].equalsIgnoreCase("unbanUUID")) {
+            if (args.length != 2) {
+                sender.sendMessage(new TextComponent("§d[Control]§c错误，请使用/my help 获取帮助"));
+                return;
+            }
+            SocketObj obj = new SocketObj(SocketObj.Fun.RemoveBanUUID, "", args[1]);
+            String temp = Read.ReadThread(obj);
+            sender.sendMessage(new TextComponent("§d[Control]§2" + temp));
+        }else if (args[0].equalsIgnoreCase("SetPlayer")) {
             if (args.length != 3) {
                 sender.sendMessage(new TextComponent("§d[Control]§c错误，请使用/my help 获取帮助"));
                 return;
@@ -64,9 +80,11 @@ public class command extends Command {
                 sender.sendMessage(new TextComponent("§d[Control]§c错误，请使用/my help 获取帮助"));
                 return;
             }
-            SocketObj obj = new SocketObj(SocketObj.Fun.AddPlayer, args[1],"");
+            SocketObj obj = new SocketObj(SocketObj.Fun.AddPlayer, args[1], "");
             String temp = Read.ReadThread(obj);
             sender.sendMessage(new TextComponent("§d[Control]§2" + temp));
+        } else {
+            sender.sendMessage(new TextComponent("§d[Control]§c错误，请使用/my help 获取帮助"));
         }
     }
 }

@@ -54,6 +54,24 @@ public class Read {
                     } else {
                         return "无法添加空ID";
                     }
+                case RemoveBanID:
+                    if (!obj.getID().isEmpty()) {
+                        PlayerConfig.RemoveBanID(obj.getID());
+                        String temp = "已解禁玩家：" + obj.getID();
+                        Loggin.boot.info(temp);
+                        return temp;
+                    } else {
+                        return "无法解禁空ID";
+                    }
+                case RemoveBanUUID:
+                    if (!obj.getID().isEmpty()) {
+                        PlayerConfig.RemoveBanUUID(obj.getID());
+                        String temp = "已解禁玩家：" + obj.getID();
+                        Loggin.boot.info(temp);
+                        return temp;
+                    } else {
+                        return "无法解禁空ID";
+                    }
             }
         } catch (Exception e) {
             e.printStackTrace();

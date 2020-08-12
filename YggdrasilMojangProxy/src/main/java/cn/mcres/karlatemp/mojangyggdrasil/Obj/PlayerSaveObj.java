@@ -50,4 +50,12 @@ public class PlayerSaveObj {
     public void AddBanUUID(String uuid) {
         banUUID.add(uuid);
     }
+
+    public void RemoveBanID(String id) {
+        banID.remove(id);
+    }
+
+    public void RemoveBanUUID(String uuid) {
+        banUUID.remove(uuid);
+    }
 }
