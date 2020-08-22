@@ -3,7 +3,7 @@
 ## https://github.com/Karlatemp/YggdrasilMojangProxy
 ## 这是原作者的作品
 统一和正版混合登录  
-只支持在BC上部署
+只测试了在BC上部署，控制插件只支持BC
 ```
 功能列表：
 1. 皮肤统一显示
@@ -23,7 +23,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.121-b13, mixed mode)
 ```
 -javaagent:{下载的jar路径}
 # 这是示例
-java -javaagent:MojangYggdrasil.jar -jar spigot-1.14.4.jar
+java -javaagent:YggdrasilMojangProxy.jar -jar bungeecord.jar
 ```
 2. 修改配置文件
 ---
@@ -64,6 +64,3 @@ java -javaagent:MojangYggdrasil.jar -jar spigot-1.14.4.jar
 #示例
 "-javaagent:F:\Java Tools\SkinViewer.jar"
 ```
-
-最好不要尝试使用相对位置,因为我无法确定文件应该放在哪,可能每个启动器都不一样?
-如果相对位置是可以用的请找Karlatemp修改
