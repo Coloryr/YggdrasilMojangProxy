@@ -25,6 +25,7 @@ import java.util.logging.Level;
 public class BCSupport implements ClassFileTransformer, HttpHandler {
 
     private static final String root = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=";
+    private static final String root1 = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=%s&serverId=%s%s";
     private int port;
     private boolean booted = false;
 
@@ -99,8 +100,11 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
                 startup();
                 byte[] replaced = replace(classfileBuffer, root, "http://127.0.0.1:" + port + "/?username=");
                 if (Arrays.equals(replaced, classfileBuffer)) {
-                    Loggin.boot.severe("错误，不能修改BC源码");
-                    System.exit(0);
+                    replaced = replace(classfileBuffer, root1, "http://127.0.0.1:" + port + "/?username=%s&serverId=%s%s");
+                    if (Arrays.equals(replaced, classfileBuffer)) {
+                        Loggin.boot.severe("错误，不能修改BC源码");
+                        System.exit(0);
+                    }
                 }
                 return replaced;
             }
