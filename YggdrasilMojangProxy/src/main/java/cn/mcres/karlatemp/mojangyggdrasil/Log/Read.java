@@ -47,6 +47,11 @@ public class Read {
                     }
                 case AddPlayer:
                     if (!obj.getID().isEmpty()) {
+                        if (PlayerConfig.HavePlayer(obj.getID())) {
+                            String temp = "玩家ID：" + obj.getID() + "已存在";
+                            Loggin.boot.info(temp);
+                            return temp;
+                        }
                         PlayerConfig.AddPlayer(obj.getID(), "");
                         String temp = "已添加空白玩家：" + obj.getID();
                         Loggin.boot.info(temp);

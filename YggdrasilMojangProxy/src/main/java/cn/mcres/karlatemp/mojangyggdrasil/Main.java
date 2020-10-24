@@ -3,7 +3,6 @@ package cn.mcres.karlatemp.mojangyggdrasil;
 import cn.mcres.karlatemp.mojangyggdrasil.Config.MainConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.ConfigObj;
-import cn.mcres.karlatemp.mojangyggdrasil.bungeecord.BCSupport;
 
 import java.lang.instrument.Instrumentation;
 

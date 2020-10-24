@@ -1,8 +1,7 @@
-package cn.mcres.karlatemp.mojangyggdrasil.bungeecord;
+package cn.mcres.karlatemp.mojangyggdrasil;
 
 import cn.mcres.karlatemp.mojangyggdrasil.Config.PlayerConfig;
 import cn.mcres.karlatemp.mojangyggdrasil.Log.Loggin;
-import cn.mcres.karlatemp.mojangyggdrasil.Main;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.LoginObj;
 import cn.mcres.karlatemp.mojangyggdrasil.Obj.SkinOBJ;
 import com.google.gson.Gson;

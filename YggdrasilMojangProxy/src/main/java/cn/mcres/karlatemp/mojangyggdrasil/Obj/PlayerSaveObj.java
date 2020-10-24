@@ -58,4 +58,8 @@ public class PlayerSaveObj {
     public void RemoveBanUUID(String uuid) {
         banUUID.remove(uuid);
     }
+
+    public boolean havePlayer(String id) {
+        return players.containsKey(id);
+    }
 }

@@ -105,4 +105,8 @@ public class PlayerConfig {
     public static boolean isBan(String id, String uuid) {
         return playerUuid.getBanID().contains(id) || playerUuid.getBanUUID().contains(uuid);
     }
+
+    public static boolean HavePlayer(String id) {
+        return playerUuid.havePlayer(id);
+    }
 }
