@@ -1,5 +1,8 @@
 {
   "Port" : 25566,
   "Address": "https://auth2.nide8.com:233/b74ac4f292e811e88feb525400b59b6a",
-  "Priority": 0
+  "Priority": 0,
+  "Message": "你还没有使用过正版登录",
+  "Message1": "连接到登录服务器失败",
+  "Message2": "你已被服务器禁止进入"
 }

@@ -109,4 +109,9 @@ public class PlayerConfig {
     public static boolean HavePlayer(String id) {
         return playerUuid.havePlayer(id);
     }
+
+    public static void RemovePlayer(String id) {
+        playerUuid.RemoveID(id);
+        save();
+    }
 }

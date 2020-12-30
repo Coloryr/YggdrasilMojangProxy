@@ -62,4 +62,8 @@ public class PlayerSaveObj {
     public boolean havePlayer(String id) {
         return players.containsKey(id);
     }
+
+    public void RemoveID(String id) {
+        players.remove(id);
+    }
 }

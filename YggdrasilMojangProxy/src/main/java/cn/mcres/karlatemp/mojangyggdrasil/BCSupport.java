@@ -184,28 +184,46 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-
         try {
+            OutputStream out = httpExchange.getResponseBody();
             if (!done) {
-               throw new Exception();
+                LoginObj obj = new LoginObj();
+                obj.setId(null);
+                obj.setName(Main.Config.getMessage1());
+                temp = new Gson().toJson(obj);
+                httpExchange.sendResponseHeaders(200, 0);
+                out.write(temp.getBytes(StandardCharsets.UTF_8));
+                return;
             }
             LoginObj obj = new Gson().fromJson(temp, LoginObj.class);
-            OutputStream out = httpExchange.getResponseBody();
             if (PlayerConfig.isBan(obj.getName(), obj.getId())) {
-                out.write("{}".getBytes());
-                throw new Exception();
+                obj.setId(null);
+                obj.setName(Main.Config.getMessage2());
+                temp = new Gson().toJson(obj);
+                httpExchange.sendResponseHeaders(200, 0);
+                out.write(temp.getBytes(StandardCharsets.UTF_8));
             }
             switch (Main.Config.getPriority()) {
                 case 1:
                     if (state == 2 && !PlayerConfig.haveName(obj.getName())) {
                         Loggin.boot.info("玩家：" + obj.getName() + "没用使用设置的地址登录过");
-                        throw new Exception();
+                        obj.setId(null);
+                        obj.setName(Main.Config.getMessage());
+                        temp = new Gson().toJson(obj);
+                        httpExchange.sendResponseHeaders(200, 0);
+                        out.write(temp.getBytes(StandardCharsets.UTF_8));
+                        return;
                     }
                     break;
                 case 2:
                     if (state == 1 && !PlayerConfig.haveName(obj.getName())) {
                         Loggin.boot.info("玩家：" + obj.getName() + "没用使用正版登录过");
-                        throw new Exception();
+                        obj.setId(null);
+                        obj.setName(Main.Config.getMessage());
+                        temp = new Gson().toJson(obj);
+                        httpExchange.sendResponseHeaders(200, 0);
+                        out.write(temp.getBytes(StandardCharsets.UTF_8));
+                        return;
                     }
                     break;
             }
@@ -225,10 +243,8 @@ public class BCSupport implements ClassFileTransformer, HttpHandler {
             obj.setId(uuid);
             temp = new Gson().toJson(obj);
             httpExchange.sendResponseHeaders(200, 0);
-            out.write(temp.getBytes());
+            out.write(temp.getBytes(StandardCharsets.UTF_8));
             Loggin.boot.info("玩家：" + obj.getName() + " UUID:" + obj.getId());
-        } catch (Exception e) {
-            httpExchange.sendResponseHeaders(204, 0);
         } finally {
             httpExchange.close();
         }

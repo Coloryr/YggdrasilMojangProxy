@@ -3,7 +3,7 @@ package cn.mcres.karlatemp.mojangyggdrasil.Obj;
 public class SocketObj {
     public enum Fun
     {
-        ReSkin,Reload,AddBanID,SetPlayer,AddPlayer,RemoveBanID,RemoveBanUUID
+        ReSkin,Reload,AddBanID,SetPlayer,AddPlayer,RemoveBanID,RemoveBanUUID,RemovePlayer
     }
 
     private Fun Do;

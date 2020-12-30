@@ -16,7 +16,6 @@ public class Read {
                         String temp = "已设置" + obj.getID() + "的UUID为：" + obj.getUUID();
                         Loggin.boot.info(temp);
                         return temp;
-
                     }
                 case ReSkin:
                     if (obj.getID().isEmpty()) {
@@ -76,6 +75,16 @@ public class Read {
                         return temp;
                     } else {
                         return "无法解禁空ID";
+                    }
+                case RemovePlayer:
+                    if (!obj.getID().isEmpty()) {
+                        if (PlayerConfig.haveName(obj.getID())) {
+                            PlayerConfig.RemovePlayer(obj.getID());
+                            return "已删除玩家：" + obj.getID();
+                        }
+                        return "没有玩家：" + obj.getID();
+                    } else {
+                        return "无法删除空ID";
                     }
             }
         } catch (Exception e) {
