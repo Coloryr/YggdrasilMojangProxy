@@ -26,7 +26,7 @@ public class Main {
         MainConfig.loadconfig();
         Config.setAddress(www(Config.getAddress()));
         Loggin.boot.info("辅助登录地址：" + Config.getAddress());
-        BCSupport.inject(i);
+        InitSupport.inject(i);
     }
 
     public static void agentmain(String opt, Instrumentation i) {
