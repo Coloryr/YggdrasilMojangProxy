@@ -1,31 +1,32 @@
 package Color_yr.Control;
 
+import Color_yr.Control.Side.ISide;
+import Color_yr.Control.Side.ILog;
 import com.google.gson.Gson;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.logging.Logger;
 
-
-public class Control extends Plugin {
-
-    private static final String Version = "1.0.0";
-
-    public static int Port = 123;
-
+public class Control {
+    public  static final String Version = "1.2.0";
     public static ConfigObj config;
-    public static File FileName;
+    private static File FileName;
+    public static ILog log;
+    public static ISide side;
 
-
-    public static Logger log = ProxyServer.getInstance().getLogger();
-
-    private void loadconfig() {
-        Port = config.getPort();
+    public static void loadconfig() {
+        try {
+            config = new Gson().fromJson(new FileReader(FileName), ConfigObj.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (config == null) {
+            config = new ConfigObj();
+            save();
+        }
     }
 
-    private static void save() {
+    public static void save() {
         try {
             String data = new Gson().toJson(config);
             if (FileName.exists()) {
@@ -33,45 +34,26 @@ public class Control extends Plugin {
                 out.write(data);
                 out.close();
             }
+            loadconfig();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    void setConfig() {
+    public void init(File local) {
         try {
             if (FileName == null) {
-                FileName = new File(getDataFolder(), "config.json");
-                if (!getDataFolder().exists())
-                    getDataFolder().mkdir();
+                FileName = new File(local, "config.json");
+                if (!local.exists())
+                    local.mkdir();
                 if (!FileName.exists()) {
-                    InputStream in = getResourceAsStream("config.json");
+                    InputStream in = this.getClass().getResourceAsStream("/config.json");
                     Files.copy(in, FileName.toPath());
                 }
             }
-
-            config = new Gson().fromJson(new FileReader(FileName), ConfigObj.class);
-            if (config == null) {
-                config = new ConfigObj(123);
-                save();
-            } else {
-                loadconfig();
-            }
         } catch (IOException e) {
-            log.warning("§d[Control]§c配置文件错误：" + e);
+            log.warning("§d[Control]§c配置文件错误：");
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onEnable() {
-        log.info("§d[Control]§e正在启动，感谢使用，本插件交流群：571239090");
-        setConfig();
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new command());
-        log.info("§d[Control]§e已启动-" + Version);
-    }
-
-    @Override
-    public void onDisable() {
-        log.info("§d[Control]§e已停止，感谢使用");
     }
 }

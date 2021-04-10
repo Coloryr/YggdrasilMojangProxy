@@ -1,4 +1,4 @@
 name: Control
-main: Color_yr.Control.Control
+main: Color_yr.Control.ControlBC
 author: Color_yr
-version: 1.0.0
+version: 1.2.0
