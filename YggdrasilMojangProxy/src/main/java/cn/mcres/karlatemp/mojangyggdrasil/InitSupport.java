@@ -25,6 +25,7 @@ public class InitSupport implements ClassFileTransformer, HttpHandler {
 
     private static final String root = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=";
     private static final String root1 = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=%s&serverId=%s%s";
+    private static final String root2 = "https://sessionserver.mojang.com/session/minecraft/hasJoined";
     private int port;
     private boolean booted = false;
 
@@ -74,6 +75,8 @@ public class InitSupport implements ClassFileTransformer, HttpHandler {
     public static void inject(Instrumentation i) {
         InitSupport init = new InitSupport();
         init.port = Main.Config.getPort();
+        //System.setProperty("mojang.sessionserver", "http://127.0.0.1:" + init.port);
+        init.startup();
         new Thread(() -> {
             // Wait Authlib-injector
             i.addTransformer(init);
@@ -93,7 +96,6 @@ public class InitSupport implements ClassFileTransformer, HttpHandler {
         if (className != null) {
             if (className.equals("net/md_5/bungee/connection/InitialHandler")) {
                 Loggin.boot.info("修改BC源码中...");
-                startup();
                 byte[] replaced = replace(classfileBuffer, root, "http://127.0.0.1:" + port + "/?username=");
                 if (Arrays.equals(replaced, classfileBuffer)) {
                     replaced = replace(classfileBuffer, root1, "http://127.0.0.1:" + port + "/?username=%s&serverId=%s%s");
@@ -104,15 +106,17 @@ public class InitSupport implements ClassFileTransformer, HttpHandler {
                 }
                 return replaced;
             }
-            else  if (className.equals("com/velocitypowered/proxy/connection/client/LoginSessionHandler")) {
+            else if (className.equals("com/velocitypowered/proxy/connection/client/LoginSessionHandler")) {
                 Loggin.boot.info("修改BC源码中...");
-                startup();
                 byte[] replaced = replace(classfileBuffer, root, "http://127.0.0.1:" + port + "/?username=");
                 if (Arrays.equals(replaced, classfileBuffer)) {
                     replaced = replace(classfileBuffer, root1, "http://127.0.0.1:" + port + "/?username=%s&serverId=%s%s");
                     if (Arrays.equals(replaced, classfileBuffer)) {
-                        Loggin.boot.severe("错误，不能修改源码");
-                        System.exit(0);
+                        replaced = replace(classfileBuffer, root2, "http://127.0.0.1:" + port);
+                        if (Arrays.equals(replaced, classfileBuffer)) {
+                            Loggin.boot.severe("错误，不能修改源码");
+                            System.exit(0);
+                        }
                     }
                 }
                 return replaced;

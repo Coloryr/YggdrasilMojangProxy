@@ -22,7 +22,7 @@ public class Main {
 
     private static void bootstart(Instrumentation i) {
         Loggin.boot.info("混合登录初始化中");
-        Loggin.boot.info("版本：1.2.0");
+        Loggin.boot.info("版本：1.4.0");
         MainConfig.loadconfig();
         Config.setAddress(www(Config.getAddress()));
         Loggin.boot.info("辅助登录地址：" + Config.getAddress());
